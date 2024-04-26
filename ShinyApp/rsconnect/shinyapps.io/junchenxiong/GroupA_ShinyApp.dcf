@@ -1,0 +1,12 @@
+name: GroupA_ShinyApp
+title: GroupA_ShinyApp
+username: junchenxiong
+account: junchenxiong
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11830868
+bundleId: 8530725
+url: https://junchenxiong.shinyapps.io/GroupA_ShinyApp/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
