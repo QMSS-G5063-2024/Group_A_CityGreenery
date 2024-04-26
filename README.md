@@ -1,5 +1,4 @@
-# Group A: City Greenery Final Project
-## Welcome to our City Greenery Project! 🌳🌃
+## Welcome to Group A's City Greenery Project! 🌳🌃
 ### Overview 
 Our Shiny website offers an immersive exploration of New York City's green spaces. This project comprises three main components:
 1. **Tree Visualization:** Dive into NYC's urban forest with our integrated leaflet and static plots. Explore tree counts, density, and park distribution across the city's five boroughs.
