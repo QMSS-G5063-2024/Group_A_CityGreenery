@@ -1,7 +1,14 @@
 # Group_A_CityGreenery
 
 ## Final Project
+
+
+### Shiny Website
 You can view our project website using this [link!](https://junchenxiong.shinyapps.io/GroupA_ShinyApp/) 
+
+### Process Book
+Please also take a look at our group's [process book](GroupA_Process_BooK.pdf) here!
+
 
 ## Team Members
 
