@@ -13,7 +13,7 @@ You can view our project website using this [link!](https://junchenxiong.shinyap
 ### Process Book
 Please also take a look at our group's [process book](GroupA_Process_BooK.pdf) here!
 
-### Team Members
+## Team Members
 
 Name: Faaz Arshad\
 UNI: fsa2139\
