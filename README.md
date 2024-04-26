@@ -1,13 +1,19 @@
-# Group_A_CityGreenery
+# Group A: City Greenery Final Project
+# Welcome to our City Greenery Project! 🌳🌃
+Our Shiny website offers an immersive exploration of New York City's green spaces. This project comprises three main components:
+1. **Tree Visualization:** Dive into NYC's urban forest with our integrated leaflet and static plots. Explore tree counts, density, and park distribution across the city's five boroughs.
 
-## Final Project
+2. **Air Quality Analysis:** Delve into air quality data measured by PM2.5 levels across NYC's five boroughs. 
 
+3. **Urban Forestry Reports:** Explore key themes and trends shaping the city's approach to urban forestry from NYC's urban forestry reports. Employ LDA topic modeling and Jaccard Matrix analysis.
 
 ### Shiny Website
 You can view our project website using this [link!](https://junchenxiong.shinyapps.io/GroupA_ShinyApp/) 
 
 ### Process Book
 Please also take a look at our group's [process book](GroupA_Process_BooK.pdf) here!
+
+### Description 
 
 
 ## Team Members
