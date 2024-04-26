@@ -298,30 +298,28 @@ ui_densityVsdensity <- fluidPage(
 
 
 
+
 ui <- fluidPage(
   
   tags$head(
     # Include Google Fonts
     tags$link(href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@700&display=swap", rel="stylesheet"),
     tags$style(HTML("
-            .main-title {
-                font-size: 45px;        /* Larger font size */
-                font-weight: bold;      /* Bold font */
-                color: #2dc8be;         /* Black text */
-                background-color: #ecf0f1; /* Light grey background */
-                padding: 20px;          /* Padding around the text */
-                text-align: center;     /* Centered text */
-                border-radius: 10px;    /* Rounded corners */
-                margin-bottom: 20px;    /* Space below the title */
-            }
+              .navbar-default .navbar-nav > li > a {
+        color: #FFFFFF !important;  /* White font color for tab labels */
+      }
+      
+      .navbar-default .navbar-nav > .active > a {
+        color: #000000 !important;  /* Black font color for active tab labels */
+      }
         "))
   ),
   
   # Use a div to apply styles
-  titlePanel(div("Urban Green Space", class = "main-title")),
+  #titlePanel(div("Urban Green Space", class = "main-title")),
   
   navbarPage(
-    title = "",
+    title = tags$div("Urban Green Space", style = "font-size: 30px; color: #FFFFFF;"),
     
     # Home tab
     tabPanel("Home", 
@@ -677,7 +675,7 @@ ui <- fluidPage(
                    )
                  )
                ))),
-    tags$style(type='text/css', ".navbar {background-color: #2dc8be; }")),
+    tags$style(type='text/css', ".navbar {background-color: #006400; }")),
   verbatimTextOutput("text_output")
 )
 
@@ -691,7 +689,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   output$tree_select <- renderUI({
-    req(input$borough_native)  
+    req(input$borough_native)  # Updated input ID
     all_species <- unique(nyc_trees %>%
                             filter(borough_name == input$borough_native) %>%
                             pull(common_name))
@@ -880,27 +878,92 @@ server <- function(input, output, session) {
   
   
   
+  
+  
   # ui.AirQuality
   
   # Bar plot 
+  # output$line_plot <- renderPlot({
+  #   # Line graph code
+  #   ggplot(pm25, aes(x = Start_Date, y = Data.Value, color = Borough)) +
+  #     geom_line() +
+  #     labs(title = "PM2.5 Values Across Time for All Boroughs",
+  #          x = "Start Date",
+  #          y = "Mean PM2.5 Value",
+  #          color = "Borough") +
+  #     theme_minimal() +
+  #     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  # })
+  
+  
+  
   output$line_plot <- renderPlot({
-    # Line graph code
-    ggplot(pm25, aes(x = Start_Date, y = Data.Value, color = Borough)) +
-      geom_line() +
+    # Calculate overall mean PM2.5 value across all boroughs for each time point
+    overall_mean_pm25 <- pm25 %>%
+      group_by(Start_Date) %>%
+      summarise(mean_pm25 = mean(Data.Value, na.rm = TRUE))
+    
+    # Line graph code with enhancements
+    p <- ggplot(pm25, aes(x = Start_Date, y = Data.Value, color = Borough)) +
+      geom_line(size = 1, alpha = 0.8) +
+      geom_smooth(data = overall_mean_pm25, aes(x = Start_Date, y = mean_pm25, linetype = "Overall Trend"),  # Specify linetype for legend
+                  method = "loess", se = FALSE, color = "black") +  # Specify color for legend
       labs(title = "PM2.5 Values Across Time for All Boroughs",
            x = "Start Date",
            y = "Mean PM2.5 Value",
-           color = "Borough") +
+           color = "") +  # Remove legend title for color aesthetic
       theme_minimal() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  })  
+      theme(axis.text.x = element_text(hjust = 1, size = 12),  # Adjust x-axis label size and boldness
+            axis.text.y = element_text(size = 12),  # Adjust y-axis label size
+            axis.title.x = element_text(size = 14, face = "bold"),  # Adjust x-axis title size and boldness
+            axis.title.y = element_text(size = 14, face = "bold"),
+            plot.title = element_text(hjust = 0.5, size = 16, face = "bold")) +  # Adjust y-axis title size and boldness
+      scale_color_manual(values = c(
+        "Bronx"          = "#FFD54F",  
+        "Brooklyn"       = "#FF8A65", 
+        "Manhattan"      = "#388E3C",  
+        "Queens"         = "#4FC3F7",  
+        "Staten Island"  = "#FFB74D"
+      ), name = "Borough") +  # Add legend title for Boroughs
+      scale_linetype_manual(values = c("Overall Trend" = "dashed"), name = "Overall Trend") +  # Add legend title for Overall Trend
+      guides(color = guide_legend(override.aes = list(
+        linetype = "dashed",
+        color = c(
+          "#FFD54F",  # Bronx
+          "#FF8A65",  # Brooklyn
+          "#388E3C",  # Manhattan
+          "#4FC3F7",  # Queens
+          "#FFB74D"   # Staten Island
+        ),
+        size = 1
+      ), title.position = "top")) +  # Adjust legend for Overall Trend
+      theme(legend.position = c(0.9, 0.6))  # Adjust legend position
+    
+    print(p)
+  })
+  
+  
+  
+  
+  
+  
+  
+  
+  borough_colors <- c(
+    "Bronx"          = "#FFD54F",  
+    "Brooklyn"       = "#FF8A65", 
+    "Manhattan"      = "#388E3C",  
+    "Queens"         = "#4FC3F7",  
+    "Staten Island"  = "#FFB74D"
+  )
+  
   
   output$plotly_chart <- renderPlotly({
     # Plotly code
-    plot_ly(data = pm25_filtered, x = ~factor(year), y = ~mean_pm25, type = "bar", 
-            color = ~Borough, colors = qual_palette,
-            text = ~paste("Year: ", factor(year), "<br>", 
-                          "Borough: ", Borough, "<br>", 
+    plot_ly(data = pm25_filtered, x = ~factor(year), y = ~mean_pm25, type = "bar",
+            color = ~Borough, colors = borough_colors,
+            text = ~paste("Year: ", factor(year), "<br>",
+                          "Borough: ", Borough, "<br>",
                           "Mean Value: ", round(mean_pm25, 2)),
             hoverinfo = "text") %>%
       layout(title = "Mean PM2.5 Values by Borough for Each Year",
@@ -910,6 +973,9 @@ server <- function(input, output, session) {
              paper_bgcolor = "rgba(245,245,245,0.9)",  # Background color with transparency
              plot_bgcolor = "rgba(245,245,245,0.9)")  # Background color with transparency
   })
+  
+  
+  
   
   
   
